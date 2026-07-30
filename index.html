@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratório de Cruzamento Pokémon - RPG</title>
+    <style>
+        :root {
+            --bg-main: #0b0f19;
+            --bg-card: #151d2a;
+            --bg-input: #1e293b;
+            --border-color: #2a3a52;
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --accent-alpha: #ef4444;
+            --accent-shiny: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --badge-no: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            padding: 2rem 1rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .dashboard {
+            max-width: 1100px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        header {
+            text-align: center;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        header h1 {
+            font-size: 2rem;
+            color: var(--text-main);
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-top: 0.25rem;
+        }
+
+        .grid-parents {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .input-number {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-number:focus {
+            border-color: var(--primary);
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            font-size: 0.95rem;
+            user-select: none;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: 1.1rem;
+            height: 1.1rem;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        /* Seção do Ovo e Prevenção de CLS */
+        .egg-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .egg-container-stable {
+            min-height: 80px;
+            background-color: var(--bg-input);
+            border: 1px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            padding: 0.85rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            width: 100%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn:active {
+            transform: scale(0.99);
+        }
+
+        .btn-secondary {
+            background-color: #334155;
+        }
+
+        .btn-secondary:hover {
+            background-color: #475569;
+        }
+
+        /* Painel de Resultados do Filhote */
+        .result-card {
+            background-color: var(--bg-card);
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: none;
+        }
+
+        .result-card.active {
+            display: block;
+        }
+
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.25rem 0;
+        }
+
+        .badge-box {
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .badge-title {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+        }
+
+        .badge-alpha-yes {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: var(--accent-alpha);
+            border: 1px solid var(--accent-alpha);
+        }
+
+        .badge-shiny-yes {
+            background-color: rgba(245, 158, 11, 0.2);
+            color: var(--accent-shiny);
+            border: 1px solid var(--accent-shiny);
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
+        }
+
+        .badge-no {
+            background-color: rgba(51, 65, 85, 0.3);
+            color: var(--text-muted);
+            border: 1px solid var(--badge-no);
+        }
+
+        .points-display {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .details-box {
+            background-color: var(--bg-input);
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: var(--text-main);
+            margin-top: 1rem;
+        }
+
+        .status-success {
+            color: #4ade80;
+            font-weight: 600;
+        }
+
+        .status-fail {
+            color: #f87171;
+            font-weight: 600;
+        }
+
+        .status-info {
+            color: #38bdf8;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+    <header>
+        <h1>Laboratório de Cruzamento Pokémon</h1>
+        <p>Sistema Genético Avançado para RPG de Mesa</p>
+    </header>
+
+    <div class="grid-parents">
+        <!-- Genitor 1 (Pai) -->
+        <div class="card">
+            <div class="card-header">
+                <span>Genitor 1 (Pai)</span>
+            </div>
+            <div class="form-group">
+                <label for="p1-pontos">Pontos Totais</label>
+                <input type="number" id="p1-pontos" class="input-number" placeholder="Ex: 150" min="0" value="100">
+            </div>
+            <div class="checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="p1-alfa">
+                    Porte Alfa
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="p1-shiny">
+                    Pokémon Shiny
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="p1-knot">
+                    Segurando Destiny Knot
+                </label>
+            </div>
+        </div>
+
+        <!-- Genitor 2 (Mãe) -->
+        <div class="card">
+            <div class="card-header">
+                <span>Genitor 2 (Mãe)</span>
+            </div>
+            <div class="form-group">
+                <label for="p2-pontos">Pontos Totais</label>
+                <input type="number" id="p2-pontos" class="input-number" placeholder="Ex: 150" min="0" value="100">
+            </div>
+            <div class="checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="p2-alfa">
+                    Porte Alfa
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="p2-shiny">
+                    Pokémon Shiny
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="p2-knot">
+                    Segurando Destiny Knot
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bônus do Treinador e Checagem do Ovo -->
+    <div class="egg-section">
+        <div class="checkbox-group">
+            <label class="checkbox-label">
+                <input type="checkbox" id="shiny-charm">
+                <strong>Bônus do Treinador:</strong> Possui Shiny Charm
+            </label>
+        </div>
+        
+        <button type="button" class="btn btn-secondary" onclick="verificarOvoSessao()">Verificar Ovo na Sessão</button>
+        
+        <!-- Container com altura fixa para evitar CLS -->
+        <div id="egg-container" class="egg-container-stable">
+            <span class="status-info">Aguardando verificação do ovo para esta sessão...</span>
+        </div>
+    </div>
+
+    <!-- Ação Principal -->
+    <div>
+        <button type="button" class="btn" onclick="gerarEstatisticasFilhote()">Gerar Estatísticas do Filhote</button>
+    </div>
+
+    <!-- Ficha do Filhote -->
+    <div id="result-card" class="result-card">
+        <div class="card-header">
+            <span>Ficha do Filhote Gerado</span>
+        </div>
+
+        <div class="badges-grid">
+            <div class="badge-box">
+                <div class="badge-title">Genética Alfa</div>
+                <div id="badge-alfa" class="badge">NÃO</div>
+            </div>
+
+            <div class="badge-box">
+                <div class="badge-title">Genética Shiny</div>
+                <div id="badge-shiny" class="badge">NÃO</div>
+            </div>
+
+            <div class="badge-box">
+                <div class="badge-title">Pontuação Final</div>
+                <div id="points-output" class="points-display">0</div>
+            </div>
+        </div>
+
+        <div class="details-box" id="calculation-details">
+            Aguardando processamento...
+        </div>
+    </div>
+</div>
+
+<script>
+    let ovoVerificadoNestaSessao = false;
+
+    function verificarOvoSessao() {
+        const eggContainer = document.getElementById('egg-container');
+
+        if (ovoVerificadoNestaSessao) {
+            eggContainer.innerHTML = '<span class="status-fail">A checagem do ovo já foi realizada nesta sessão.</span>';
+            return;
+        }
+
+        ovoVerificadoNestaSessao = true;
+        const obteveOvo = Math.random() < 0.50;
+
+        if (obteveOvo) {
+            const sessoesParaChocar = Math.floor(Math.random() * 6) + 1;
+            eggContainer.innerHTML = `
+                <span class="status-success">Ovo obtido com sucesso!</span>
+                <span style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.25rem;">
+                    Tempo necessário: <strong>${sessoesParaChocar} sessão(ões)</strong> para chocar (rolagem: 1d6).
+                </span>
+            `;
+        } else {
+            eggContainer.innerHTML = '<span class="status-fail">Nenhum ovo foi gerado durante esta sessão.</span>';
+        }
+    }
+
+    function gerarEstatisticasFilhote() {
+        // Captura e conversão estrita dos dados para inteiro na base 10
+        const p1Pontos = parseInt(document.getElementById('p1-pontos').value, 10) || 0;
+        const p1Alfa = document.getElementById('p1-alfa').checked;
+        const p1Shiny = document.getElementById('p1-shiny').checked;
+        const p1Knot = document.getElementById('p1-knot').checked;
+
+        const p2Pontos = parseInt(document.getElementById('p2-pontos').value, 10) || 0;
+        const p2Alfa = document.getElementById('p2-alfa').checked;
+        const p2Shiny = document.getElementById('p2-shiny').checked;
+        const p2Knot = document.getElementById('p2-knot').checked;
+
+        const shinyCharm = document.getElementById('shiny-charm').checked;
+
+        // 1. Processamento Genético Alfa
+        let chanceAlfa = 0.10;
+        if (p1Alfa && p2Alfa) {
+            chanceAlfa = 0.50;
+        } else if (p1Alfa || p2Alfa) {
+            chanceAlfa = 0.25;
+        }
+        const isAlfa = Math.random() < chanceAlfa;
+
+        // 2. Processamento Genético Shiny (Regra de Prioridade)
+        let denominadorShiny = 4000;
+
+        if ((p1Shiny && p2Shiny) && (p1Knot || p2Knot)) {
+            denominadorShiny = 10;
+        } else if ((p1Shiny && p1Knot) || (p2Shiny && p2Knot)) {
+            denominadorShiny = 100;
+        } else if (shinyCharm) {
+            denominadorShiny = 1000;
+        } else if (p1Shiny && p2Shiny) {
+            denominadorShiny = 2000;
+        } else if (p1Shiny || p2Shiny) {
+            denominadorShiny = 3000;
+        } else {
+            denominadorShiny = 4000;
+        }
+
+        const isShiny = Math.random() < (1 / denominadorShiny);
+
+        // 3. Herança de Pontos
+        let pontuacaoFinal = 0;
+        let detalhamentoTexto = "";
+
+        if (p1Knot || p2Knot) {
+            let basePontos = 0;
+            let secundarioPontos = 0;
+            let nomePortador = "";
+
+            if (p1Knot && p2Knot) {
+                if (p1Pontos >= p2Pontos) {
+                    basePontos = p1Pontos;
+                    secundarioPontos = p2Pontos;
+                    nomePortador = "Genitor 1 (Maior pontuação)";
+                } else {
+                    basePontos = p2Pontos;
+                    secundarioPontos = p1Pontos;
+                    nomePortador = "Genitor 2 (Maior pontuação)";
+                }
+            } else if (p1Knot) {
+                basePontos = p1Pontos;
+                secundarioPontos = p2Pontos;
+                nomePortador = "Genitor 1";
+            } else {
+                basePontos = p2Pontos;
+                secundarioPontos = p1Pontos;
+                nomePortador = "Genitor 2";
+            }
+
+            const percentualBonus = Math.random() * 0.50;
+            const pontosBonus = secundarioPontos * percentualBonus;
+            pontuacaoFinal = Math.round(basePontos + pontosBonus);
+
+            detalhamentoTexto = `Regra Aplicada: Destiny Knot (${nomePortador}). O filhote recebeu 100% dos pontos da base (${basePontos} pts) mais um bônus sorteado de ${(percentualBonus * 100).toFixed(1)}% do outro genitor (+${Math.round(pontosBonus)} pts).`;
+        } else {
+            const mediaAritmetica = (p1Pontos + p2Pontos) / 2;
+            const sorteioMediaExata = Math.random() < 0.30;
+
+            if (sorteioMediaExata) {
+                pontuacaoFinal = Math.round(mediaAritmetica);
+                detalhamentoTexto = `Regra Aplicada: Herança de Média Exata (30% de chance). O filhote herdou a média aritmética direta dos genitores (${mediaAritmetica.toFixed(1)} pts).`;
+            } else {
+                const fatorVariação = 0.70 + (Math.random() * 0.60);
+                let calculoVariação = mediaAritmetica * fatorVariação;
+                const limiteSomaTotal = p1Pontos + p2Pontos;
+
+                if (calculoVariação > limiteSomaTotal) {
+                    calculoVariação = limiteSomaTotal;
+                }
+
+                pontuacaoFinal = Math.round(calculoVariação);
+                detalhamentoTexto = `Regra Aplicada: Variação Genética (70% de chance). Multiplicador de ${(fatorVariação * 100).toFixed(1)}% aplicado sobre a média dos pais (${mediaAritmetica.toFixed(1)} pts), com teto limitado à soma dos genitores (${limiteSomaTotal} pts).`;
+            }
+        }
+
+        // 4. Exibição na Interface
+        exibirFichaFilhote(isAlfa, isShiny, pontuacaoFinal, detalhamentoTexto);
+    }
+
+    function exibirFichaFilhote(isAlfa, isShiny, pontos, detalhamento) {
+        const resultCard = document.getElementById('result-card');
+        const badgeAlfa = document.getElementById('badge-alfa');
+        const badgeShiny = document.getElementById('badge-shiny');
+        const pointsOutput = document.getElementById('points-output');
+        const calcDetails = document.getElementById('calculation-details');
+
+        // Atualização do indicador Alfa
+        if (isAlfa) {
+            badgeAlfa.textContent = "SIM";
+            badgeAlfa.className = "badge badge-alpha-yes";
+        } else {
+            badgeAlfa.textContent = "NÃO";
+            badgeAlfa.className = "badge badge-no";
+        }
+
+        // Atualização do indicador Shiny
+        if (isShiny) {
+            badgeShiny.textContent = "SIM";
+            badgeShiny.className = "badge badge-shiny-yes";
+        } else {
+            badgeShiny.textContent = "NÃO";
+            badgeShiny.className = "badge badge-no";
+        }
+
+        // Exibição dos dados numéricos e texto informativo
+        pointsOutput.textContent = pontos;
+        calcDetails.textContent = detalhamento;
+
+        // Torna o cartão visível
+        resultCard.classList.add('active');
+    }
+</script>
+
+</body>
+</html>
