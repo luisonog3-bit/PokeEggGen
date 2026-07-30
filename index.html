@@ -417,10 +417,19 @@
     const charm = document.getElementById('trainerCharm').checked;
 
     // 1. Sorteio de Alfa
-    let chanceAlfa = 0.10;
-    if (p1Alpha && p2Alpha) chanceAlfa = 0.50;
-    else if (p1Alpha || p2Alpha) chanceAlfa = 0.25;
-    
+    let chanceAlfa = 0.20; // Base: 0 Alfa = 20%
+    if (p1Alpha && p2Alpha) {
+      chanceAlfa = 0.70;   // 2 Alfas = 70%
+    } else if (p1Alpha || p2Alpha) {
+      chanceAlfa = 0.40;   // 1 Alfa = 40%
+    }
+
+    // Bônus de +15% se um Genitor ALFA estiver segurando o Destiny Knot
+    const alphaComDK = (p1Alpha && p1DK) || (p2Alpha && p2DK);
+    if (alphaComDK) {
+      chanceAlfa += 0.15;
+    }
+
     const isAlfa = Math.random() < chanceAlfa;
 
     // 2. Pontos do Filhote
@@ -476,7 +485,6 @@
       denominadorBase = 3000;
     }
 
-    // Shiny Charm reduz a dificuldade (o denominador) pela metade
     let denominadorFinal = denominadorBase;
     if (charm) {
       denominadorFinal = Math.max(1, Math.floor(denominadorBase / 2));
@@ -493,6 +501,7 @@
 
     const strAlfa = isAlfa ? "SIM" : "NÃO";
     const strShiny = isShiny ? "SIM" : "NÃO";
+    const pctAlfaStr = Math.round(chanceAlfa * 100);
 
     let badgesHTML = `<span class="badge ${isAlfa ? 'badge-alpha-yes' : 'badge-no'}">ALFA: ${strAlfa}</span>`;
     badgesHTML += `<span class="badge ${isShiny ? 'badge-shiny-yes' : 'badge-no'}">SHINY: ${strShiny}</span>`;
@@ -501,7 +510,7 @@
     badgeGroup.innerHTML = badgesHTML;
 
     detailsBox.innerText = 
-`> O Pokémon filhote é Alfa? ${strAlfa}
+`> O Pokémon filhote é Alfa? ${strAlfa} (Chance nesta rolagem: ${pctAlfaStr}%${alphaComDK ? ' — incluindo +15% do Destiny Knot' : ''})
 > O Pokémon filhote é Shiny? ${strShiny}
 > Pontuação final herdada: ${pontosFinais} pts
 
