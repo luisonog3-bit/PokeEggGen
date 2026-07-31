@@ -546,6 +546,24 @@
 </div>
 
 <script>
+    // Garantir exclusão mútua do Destiny Knot entre Pai e Mãe
+    document.addEventListener('DOMContentLoaded', () => {
+        const p1Knot = document.getElementById('p1-knot');
+        const p2Knot = document.getElementById('p2-knot');
+
+        p1Knot.addEventListener('change', () => {
+            if (p1Knot.checked) {
+                p2Knot.checked = false;
+            }
+        });
+
+        p2Knot.addEventListener('change', () => {
+            if (p2Knot.checked) {
+                p1Knot.checked = false;
+            }
+        });
+    });
+
     function salvarArquivoLocal() {
         const conteudo = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
         const blob = new Blob([conteudo], { type: 'text/html;charset=utf-8;' });
@@ -628,17 +646,7 @@
             let secundarioPontos = 0;
             let nomePortador = "";
 
-            if (p1Knot && p2Knot) {
-                if (p1Pontos >= p2Pontos) {
-                    basePontos = p1Pontos;
-                    secundarioPontos = p2Pontos;
-                    nomePortador = "Pai (Maior pontuação)";
-                } else {
-                    basePontos = p2Pontos;
-                    secundarioPontos = p1Pontos;
-                    nomePortador = "Mãe (Maior pontuação)";
-                }
-            } else if (p1Knot) {
+            if (p1Knot) {
                 basePontos = p1Pontos;
                 secundarioPontos = p2Pontos;
                 nomePortador = "Pai";
