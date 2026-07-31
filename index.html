@@ -1,447 +1,442 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratório de Cruzamento Pokémon - RPG</title>
-    <style>
-        :root {
-            --bg-main: #090d16;
-            --bg-card: rgba(20, 28, 44, 0.85);
-            --bg-input: #121929;
-            --border-color: rgba(255, 255, 255, 0.08);
-            --border-hover: rgba(99, 102, 241, 0.4);
-            
-            --primary: #6366f1;
-            --primary-glow: rgba(99, 102, 241, 0.35);
-            --accent-p1: #38bdf8;
-            --accent-p2: #ec4899;
-            --accent-alpha: #f43f5e;
-            --accent-shiny: #fbbf24;
-            --accent-success: #10b981;
-            
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --text-subtle: #64748b;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laboratório de Cruzamento Pokémon</title>
+<style>
+    :root {
+        /* ===== Tokens de cor ===== */
+        --bg: #f5f5f7;
+        --bg-blob-1: rgba(10, 132, 255, 0.10);
+        --bg-blob-2: rgba(255, 55, 95, 0.08);
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
+        --card-bg: rgba(255, 255, 255, 0.78);
+        --card-border: rgba(0, 0, 0, 0.06);
+        --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
 
-        body {
-            background-color: var(--bg-main);
-            background-image: 
-                radial-gradient(circle at 20% 10%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 80% 90%, rgba(236, 72, 153, 0.06) 0%, transparent 40%);
-            color: var(--text-main);
-            padding: 1.5rem 1rem 3rem;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-        }
+        --input-bg: rgba(0, 0, 0, 0.035);
+        --input-border: rgba(0, 0, 0, 0.08);
 
-        .dashboard {
-            max-width: 900px;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 1.25rem;
-        }
+        --text-primary: #1d1d1f;
+        --text-secondary: #6e6e73;
+        --text-tertiary: #86868b;
 
-        header {
-            text-align: center;
-            padding: 1.25rem 1rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            position: relative;
-        }
+        --accent-blue: #0a84ff;     /* Pai */
+        --accent-pink: #ff375f;     /* Mãe */
+        --accent-primary: #0071e3;  /* Ações principais */
+        --accent-primary-dark: #0058b0;
 
-        .header-tag {
-            display: inline-block;
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--primary);
-            background: rgba(99, 102, 241, 0.12);
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            margin-bottom: 0.5rem;
-            border: 1px solid rgba(99, 102, 241, 0.2);
-        }
+        --accent-alpha: #ff453a;    /* Genética Alfa */
+        --accent-shiny: #ff9f0a;    /* Genética Shiny */
+        --accent-success: #30d158;
+        --accent-fail: #ff453a;
 
-        header h1 {
-            font-size: 1.6rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            color: var(--text-main);
-        }
+        --radius-lg: 22px;
+        --radius-md: 16px;
+        --radius-sm: 12px;
+    }
 
-        header p {
-            color: var(--text-muted);
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
-        }
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        -webkit-tap-highlight-color: transparent;
+    }
 
-        .top-actions {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-        }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+                     "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background-color: var(--bg);
+        background-image:
+            radial-gradient(circle at 15% 0%, var(--bg-blob-1) 0%, transparent 45%),
+            radial-gradient(circle at 85% 100%, var(--bg-blob-2) 0%, transparent 45%);
+        background-attachment: fixed;
+        color: var(--text-primary);
+        padding: 2.5rem 1.25rem 4rem;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        -webkit-font-smoothing: antialiased;
+    }
 
-        .btn-download-self {
-            padding: 0.45rem 0.85rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-            background: var(--bg-input);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
+    .dashboard {
+        max-width: 880px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
 
-        .btn-download-self:hover {
-            color: var(--text-main);
-            border-color: var(--primary);
-        }
+    /* ===== Header ===== */
+    header {
+        text-align: center;
+        padding: 0.5rem 1rem 0.5rem;
+        position: relative;
+    }
 
-        .grid-parents {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.25rem;
-        }
+    .top-actions {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
 
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 1.25rem;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
-            transition: transform 0.2s ease, border-color 0.2s ease;
-        }
+    .btn-ghost {
+        padding: 0.5rem 0.95rem;
+        font-size: 0.8rem;
+        font-weight: 590;
+        background: rgba(0, 0, 0, 0.04);
+        border: 1px solid var(--card-border);
+        border-radius: 980px;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: background 0.2s ease, color 0.2s ease;
+    }
 
-        .card-p1 { border-top: 3px solid var(--accent-p1); }
-        .card-p2 { border-top: 3px solid var(--accent-p2); }
+    .btn-ghost:hover { background: rgba(0, 0, 0, 0.07); color: var(--text-primary); }
 
-        .card-header {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 1.25rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+    .header-eyebrow {
+        display: inline-block;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        color: var(--accent-primary);
+        margin-bottom: 0.6rem;
+    }
 
-        .card-p1 .card-header span { color: var(--accent-p1); }
-        .card-p2 .card-header span { color: var(--accent-p2); }
+    header h1 {
+        font-size: 2.1rem;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        color: var(--text-primary);
+    }
 
-        .form-group {
-            margin-bottom: 1.25rem;
-        }
+    header p {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        margin-top: 0.35rem;
+        letter-spacing: -0.01em;
+    }
 
-        .form-group label {
-            display: block;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-muted);
-            margin-bottom: 0.5rem;
-        }
+    /* ===== Cards genéricos ===== */
+    .card, .egg-section, .result-card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: var(--radius-lg);
+        backdrop-filter: blur(20px) saturate(1.4);
+        -webkit-backdrop-filter: blur(20px) saturate(1.4);
+        box-shadow: var(--card-shadow);
+    }
 
-        .input-number {
-            width: 100%;
-            padding: 0.85rem 1rem;
-            background-color: var(--bg-input);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            color: var(--text-main);
-            font-size: 1.1rem;
-            font-weight: 600;
-            outline: none;
-            transition: all 0.2s;
-        }
+    /* ===== Grid dos pais + conector central ===== */
+    .grid-parents {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.25rem;
+    }
 
-        .input-number:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px var(--primary-glow);
-        }
+    .cross-connector {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent-blue), var(--accent-pink));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 700;
+        font-size: 1.05rem;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18), 0 0 0 4px var(--bg);
+        z-index: 2;
+    }
 
-        .checkbox-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.85rem;
-        }
+    @media (max-width: 700px) { .cross-connector { display: none; } }
 
-        .toggle-label {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: var(--bg-input);
-            padding: 0.75rem 1rem;
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
-            cursor: pointer;
-            user-select: none;
-            transition: all 0.2s;
-        }
+    .card { padding: 1.5rem; }
+    .card-p1 { border-top: 3px solid var(--accent-blue); }
+    .card-p2 { border-top: 3px solid var(--accent-pink); }
 
-        .toggle-label:hover {
-            border-color: var(--border-hover);
-        }
+    .card-header {
+        font-size: 1.05rem;
+        font-weight: 650;
+        letter-spacing: -0.01em;
+        margin-bottom: 1.35rem;
+        padding-bottom: 0.85rem;
+        border-bottom: 1px solid var(--card-border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
 
-        .toggle-text {
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: var(--text-main);
-        }
+    .card-p1 .card-header span { color: var(--accent-blue); }
+    .card-p2 .card-header span { color: var(--accent-pink); }
 
-        .toggle-switch {
-            position: relative;
-            width: 44px;
-            height: 24px;
-            background: #1e293b;
-            border-radius: 12px;
-            transition: background-color 0.2s;
-            flex-shrink: 0;
-        }
+    .form-group { margin-bottom: 1.35rem; }
 
-        .toggle-switch::after {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: #94a3b8;
-            transition: transform 0.2s, background-color 0.2s;
-        }
+    .form-group label {
+        display: block;
+        font-size: 0.78rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--text-tertiary);
+        margin-bottom: 0.5rem;
+    }
 
-        input[type="checkbox"] {
-            display: none;
-        }
+    .input-number {
+        width: 100%;
+        padding: 0.9rem 1rem;
+        background-color: var(--input-bg);
+        border: 1px solid var(--input-border);
+        border-radius: var(--radius-sm);
+        color: var(--text-primary);
+        font-size: 1.15rem;
+        font-weight: 600;
+        outline: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
 
-        input[type="checkbox"]:checked + .toggle-label {
-            border-color: rgba(99, 102, 241, 0.4);
-            background: rgba(99, 102, 241, 0.08);
-        }
+    .input-number::placeholder { color: var(--text-tertiary); font-weight: 500; }
 
-        input[type="checkbox"]:checked + .toggle-label .toggle-switch {
-            background: var(--primary);
-        }
+    .input-number:focus {
+        background-color: #fff;
+        border-color: var(--accent-primary);
+        box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.14);
+    }
 
-        input[type="checkbox"]:checked + .toggle-label .toggle-switch::after {
-            transform: translateX(20px);
-            background: #ffffff;
-        }
+    /* ===== Toggles estilo iOS ===== */
+    .checkbox-group { display: flex; flex-direction: column; gap: 0.7rem; }
 
-        .egg-section {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 1.25rem;
-            backdrop-filter: blur(12px);
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
+    .toggle-label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--input-bg);
+        padding: 0.85rem 1rem;
+        border-radius: var(--radius-sm);
+        border: 1px solid transparent;
+        cursor: pointer;
+        user-select: none;
+        transition: background 0.2s ease, border-color 0.2s ease;
+    }
 
-        .egg-container-stable {
-            min-height: 85px;
-            background-color: var(--bg-input);
-            border: 1px dashed var(--border-color);
-            border-radius: 12px;
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            transition: all 0.2s ease;
-        }
+    .toggle-label:hover { background: rgba(0, 0, 0, 0.055); }
 
-        .btn {
-            background: linear-gradient(135deg, var(--primary) 0%, #4f46e5 100%);
-            color: #ffffff;
-            border: none;
-            border-radius: 12px;
-            padding: 1rem 1.5rem;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-            width: 100%;
-            box-shadow: 0 4px 16px var(--primary-glow);
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            gap: 0.5rem;
-        }
+    .toggle-text { font-size: 0.92rem; font-weight: 500; color: var(--text-primary); }
+    .toggle-hint { display: block; font-size: 0.74rem; color: var(--text-tertiary); margin-top: 0.15rem; font-weight: 400; }
 
-        .btn:hover {
-            opacity: 0.95;
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px var(--primary-glow);
-        }
+    .toggle-switch {
+        position: relative;
+        width: 46px;
+        height: 27px;
+        background: #e5e5ea;
+        border-radius: 999px;
+        transition: background-color 0.25s ease;
+        flex-shrink: 0;
+    }
 
-        .btn:active {
-            transform: translateY(0);
-        }
+    .toggle-switch::after {
+        content: '';
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 23px;
+        height: 23px;
+        border-radius: 50%;
+        background: #ffffff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
 
-        .btn-secondary {
-            background: #1e293b;
-            color: var(--text-main);
-            box-shadow: none;
-            border: 1px solid var(--border-color);
-        }
+    input[type="checkbox"] { display: none; }
 
-        .btn-secondary:hover {
-            background: #334155;
-            border-color: var(--border-hover);
-        }
+    input[type="checkbox"]:checked + .toggle-label { border-color: rgba(0, 113, 227, 0.25); background: rgba(0, 113, 227, 0.08); }
+    input[type="checkbox"]:checked + .toggle-label .toggle-switch { background: var(--accent-success); }
+    input[type="checkbox"]:checked + .toggle-label .toggle-switch::after { transform: translateX(19px); }
 
-        .result-card {
-            background: var(--bg-card);
-            border: 1px solid rgba(99, 102, 241, 0.4);
-            border-radius: 16px;
-            padding: 1.5rem;
-            display: none;
-            box-shadow: 0 0 30px rgba(99, 102, 241, 0.15);
-            animation: fadeIn 0.3s ease-out forwards;
-        }
+    /* destaque específico para os toggles de Destiny Knot quando ativos */
+    input[id$="knot"]:checked + .toggle-label .toggle-switch { background: var(--accent-primary); }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+    input[type="checkbox"]:focus-visible + .toggle-label { outline: 2px solid var(--accent-primary); outline-offset: 2px; }
 
-        .result-card.active {
-            display: block;
-        }
+    /* ===== Seção do ovo ===== */
+    .egg-section { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.1rem; }
 
-        .badges-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 1rem;
-            margin: 1.25rem 0;
-        }
+    .egg-container-stable {
+        min-height: 78px;
+        background-color: var(--input-bg);
+        border: 1px dashed var(--input-border);
+        border-radius: var(--radius-md);
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        transition: all 0.2s ease;
+    }
 
-        .badge-box {
-            background-color: var(--bg-input);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1.1rem;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
+    /* ===== Botões ===== */
+    .btn {
+        background: linear-gradient(180deg, var(--accent-primary) 0%, var(--accent-primary-dark) 100%);
+        color: #ffffff;
+        border: none;
+        border-radius: 980px;
+        padding: 1rem 1.5rem;
+        font-size: 1.02rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        cursor: pointer;
+        transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+        width: 100%;
+        box-shadow: 0 8px 20px rgba(0, 113, 227, 0.28);
+    }
 
-        .badge-title {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            font-weight: 700;
-            letter-spacing: 0.8px;
-            margin-bottom: 0.6rem;
-        }
+    .btn:hover { opacity: 0.94; box-shadow: 0 10px 24px rgba(0, 113, 227, 0.34); }
+    .btn:active { transform: scale(0.985); }
 
-        .badge {
-            display: inline-block;
-            padding: 0.4rem 1.2rem;
-            border-radius: 20px;
-            font-weight: 800;
-            font-size: 1.05rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+    .btn-secondary {
+        background: rgba(0, 0, 0, 0.045);
+        color: var(--text-primary);
+        box-shadow: none;
+        border: 1px solid var(--card-border);
+    }
 
-        .badge-alpha-yes {
-            background-color: rgba(244, 63, 94, 0.15);
-            color: var(--accent-alpha);
-            border: 1px solid var(--accent-alpha);
-            box-shadow: 0 0 12px rgba(244, 63, 94, 0.25);
-        }
+    .btn-secondary:hover { background: rgba(0, 0, 0, 0.08); box-shadow: none; }
 
-        .badge-shiny-yes {
-            background-color: rgba(251, 191, 36, 0.15);
-            color: var(--accent-shiny);
-            border: 1px solid var(--accent-shiny);
-            box-shadow: 0 0 14px rgba(251, 191, 36, 0.3);
-        }
+    /* ===== Resultado ===== */
+    .result-card {
+        padding: 1.75rem;
+        display: none;
+        animation: fadeIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
 
-        .badge-no {
-            background-color: rgba(51, 65, 85, 0.3);
-            color: var(--text-subtle);
-            border: 1px solid #334155;
-        }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 
-        .points-display {
-            font-size: 2.2rem;
-            font-weight: 900;
-            color: #ffffff;
-            text-shadow: 0 0 15px var(--primary-glow);
-        }
+    .result-card.active { display: block; }
 
-        .details-box {
-            background-color: var(--bg-input);
-            border-left: 4px solid var(--primary);
-            padding: 1rem 1.2rem;
-            border-radius: 4px 12px 12px 4px;
-            font-size: 0.925rem;
-            line-height: 1.6;
-            color: var(--text-main);
-            margin-top: 1.25rem;
-        }
+    .badges-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 1rem;
+        margin: 1.35rem 0;
+    }
 
-        .status-success { color: var(--accent-success); font-weight: 700; }
-        .status-fail { color: var(--accent-alpha); font-weight: 700; }
-        .status-info { color: var(--accent-p1); font-weight: 600; }
+    .badge-box {
+        background-color: var(--input-bg);
+        border: 1px solid var(--card-border);
+        border-radius: var(--radius-md);
+        padding: 1.2rem;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
 
-        @media (max-width: 480px) {
-            header h1 { font-size: 1.35rem; }
-            .top-actions { position: static; text-align: right; margin-bottom: 0.5rem; }
-            .points-display { font-size: 1.8rem; }
-        }
-    </style>
+    .badge-title {
+        font-size: 0.72rem;
+        color: var(--text-tertiary);
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 0.7px;
+        margin-bottom: 0.65rem;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 0.4rem 1.2rem;
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+    }
+
+    .badge-alpha-yes {
+        background-color: rgba(255, 69, 58, 0.1);
+        color: var(--accent-alpha);
+        border: 1px solid rgba(255, 69, 58, 0.35);
+    }
+
+    .badge-shiny-yes {
+        background-color: rgba(255, 159, 10, 0.12);
+        color: var(--accent-shiny);
+        border: 1px solid rgba(255, 159, 10, 0.4);
+    }
+
+    .badge-no {
+        background-color: rgba(0, 0, 0, 0.035);
+        color: var(--text-tertiary);
+        border: 1px solid var(--card-border);
+    }
+
+    .points-display {
+        font-size: 2.3rem;
+        font-weight: 750;
+        letter-spacing: -0.02em;
+        color: var(--text-primary);
+    }
+
+    .details-box {
+        background-color: var(--input-bg);
+        border-left: 3px solid var(--accent-primary);
+        padding: 1rem 1.2rem;
+        border-radius: 4px 12px 12px 4px;
+        font-size: 0.92rem;
+        line-height: 1.6;
+        color: var(--text-primary);
+        margin-top: 1.35rem;
+    }
+
+    .status-success { color: var(--accent-success); font-weight: 700; }
+    .status-fail { color: var(--accent-fail); font-weight: 700; }
+    .status-info { color: var(--accent-primary); font-weight: 600; }
+
+    @media (max-width: 480px) {
+        header h1 { font-size: 1.6rem; }
+        .top-actions { position: static; text-align: right; margin-bottom: 0.75rem; }
+        .points-display { font-size: 1.9rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+    }
+</style>
 </head>
 <body>
 
 <div class="dashboard">
-    <div class="top-actions">
-        <button type="button" class="btn-download-self" onclick="salvarArquivoLocal()">Salvar Arquivo (.html)</button>
-    </div>
-
     <header>
-        <span class="header-tag">RPG Lab System</span>
+        <div class="top-actions">
+            <button type="button" class="btn-ghost" onclick="salvarArquivoLocal()">Salvar arquivo (.html)</button>
+        </div>
+        <span class="header-eyebrow">RPG Lab System</span>
         <h1>Calculadora de Cruzamento</h1>
-        <p>Genética & Herança de Pontos Pokémon</p>
+        <p>Genética &amp; herança de pontos Pokémon</p>
     </header>
 
     <div class="grid-parents">
+        <div class="cross-connector" aria-hidden="true">×</div>
+
         <!-- PAI -->
         <div class="card card-p1">
-            <div class="card-header">
-                <span>PAI</span>
-            </div>
+            <div class="card-header"><span>Pai</span></div>
+
             <div class="form-group">
-                <label for="p1-pontos">Pontos Totais</label>
-                <input type="number" id="p1-pontos" class="input-number" placeholder="Ex: 5" min="0" value="">
+                <label for="p1-pontos">Pontos totais</label>
+                <input type="number" id="p1-pontos" class="input-number" placeholder="Ex: 5" min="0" inputmode="numeric">
             </div>
+
             <div class="checkbox-group">
                 <input type="checkbox" id="p1-alfa">
                 <label for="p1-alfa" class="toggle-label">
@@ -457,7 +452,10 @@
 
                 <input type="checkbox" id="p1-knot">
                 <label for="p1-knot" class="toggle-label">
-                    <span class="toggle-text">Destiny Knot</span>
+                    <span>
+                        <span class="toggle-text">Destiny Knot</span>
+                        <span class="toggle-hint">Desativa o da Mãe automaticamente</span>
+                    </span>
                     <span class="toggle-switch"></span>
                 </label>
             </div>
@@ -465,13 +463,13 @@
 
         <!-- MÃE -->
         <div class="card card-p2">
-            <div class="card-header">
-                <span>MÃE</span>
-            </div>
+            <div class="card-header"><span>Mãe</span></div>
+
             <div class="form-group">
-                <label for="p2-pontos">Pontos Totais</label>
-                <input type="number" id="p2-pontos" class="input-number" placeholder="Ex: 5" min="0" value="">
+                <label for="p2-pontos">Pontos totais</label>
+                <input type="number" id="p2-pontos" class="input-number" placeholder="Ex: 5" min="0" inputmode="numeric">
             </div>
+
             <div class="checkbox-group">
                 <input type="checkbox" id="p2-alfa">
                 <label for="p2-alfa" class="toggle-label">
@@ -487,82 +485,82 @@
 
                 <input type="checkbox" id="p2-knot">
                 <label for="p2-knot" class="toggle-label">
-                    <span class="toggle-text">Destiny Knot</span>
+                    <span>
+                        <span class="toggle-text">Destiny Knot</span>
+                        <span class="toggle-hint">Desativa o do Pai automaticamente</span>
+                    </span>
                     <span class="toggle-switch"></span>
                 </label>
             </div>
         </div>
     </div>
 
-    <!-- Bônus do Treinador e Checagem do Ovo -->
+    <!-- Bônus do treinador e checagem do ovo -->
     <div class="egg-section">
         <div class="checkbox-group">
             <input type="checkbox" id="shiny-charm">
             <label for="shiny-charm" class="toggle-label">
-                <span class="toggle-text"><strong>Bônus do Treinador:</strong> Possui Shiny Charm</span>
+                <span class="toggle-text"><strong>Bônus do treinador:</strong> possui Shiny Charm</span>
                 <span class="toggle-switch"></span>
             </label>
         </div>
-        
-        <button type="button" class="btn btn-secondary" onclick="verificarOvoSessao()">Verificar Ovo na Sessão</button>
-        
-        <div id="egg-container" class="egg-container-stable">
+
+        <button type="button" class="btn btn-secondary" onclick="verificarOvoSessao()">Verificar ovo na sessão</button>
+
+        <div id="egg-container" class="egg-container-stable" aria-live="polite">
             <span class="status-info">Aguardando verificação do ovo...</span>
         </div>
     </div>
 
-    <!-- Ação Principal -->
+    <!-- Ação principal -->
     <div>
-        <button type="button" class="btn" onclick="gerarEstatisticasFilhote()">Gerar Estatísticas do Filhote</button>
+        <button type="button" class="btn" onclick="gerarEstatisticasFilhote()">Gerar estatísticas do filhote</button>
     </div>
 
-    <!-- Ficha do Filhote -->
-    <div id="result-card" class="result-card">
-        <div class="card-header">
-            <span style="color: var(--text-main);">Ficha do Filhote Gerado</span>
-        </div>
+    <!-- Ficha do filhote -->
+    <div id="result-card" class="result-card" aria-live="polite">
+        <div class="card-header"><span>Ficha do filhote gerado</span></div>
 
         <div class="badges-grid">
             <div class="badge-box">
                 <div class="badge-title">Genética Alfa</div>
-                <div id="badge-alfa" class="badge">NÃO</div>
+                <div id="badge-alfa" class="badge badge-no">NÃO</div>
             </div>
 
             <div class="badge-box">
                 <div class="badge-title">Genética Shiny</div>
-                <div id="badge-shiny" class="badge">NÃO</div>
+                <div id="badge-shiny" class="badge badge-no">NÃO</div>
             </div>
 
             <div class="badge-box">
-                <div class="badge-title">Pontuação Final</div>
+                <div class="badge-title">Pontuação final</div>
                 <div id="points-output" class="points-display">0</div>
             </div>
         </div>
 
-        <div class="details-box" id="calculation-details">
-            Aguardando processamento...
-        </div>
+        <div class="details-box" id="calculation-details">Aguardando processamento...</div>
     </div>
 </div>
 
 <script>
-    // Garantir exclusão mútua do Destiny Knot entre Pai e Mãe
-    document.addEventListener('DOMContentLoaded', () => {
-        const p1Knot = document.getElementById('p1-knot');
-        const p2Knot = document.getElementById('p2-knot');
+    /**
+     * ---------------------------------------------------------------
+     * Destiny Knot: apenas um dos genitores pode carregá-lo por vez.
+     * Ao ativar um dos toggles, o outro é automaticamente desativado.
+     * ---------------------------------------------------------------
+     */
+    (function configurarExclusividadeDestinyKnot() {
+        const knots = [document.getElementById('p1-knot'), document.getElementById('p2-knot')];
 
-        p1Knot.addEventListener('change', () => {
-            if (p1Knot.checked) {
-                p2Knot.checked = false;
-            }
+        knots.forEach((knotAtual, indice) => {
+            const knotOposto = knots[1 - indice];
+            knotAtual.addEventListener('change', () => {
+                if (knotAtual.checked) {
+                    knotOposto.checked = false;
+                }
+            });
         });
-
-        p2Knot.addEventListener('change', () => {
-            if (p2Knot.checked) {
-                p1Knot.checked = false;
-            }
-        });
-    });
+    })();
 
     function salvarArquivoLocal() {
         const conteudo = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
@@ -585,7 +583,7 @@
             const sessoesParaChocar = Math.floor(Math.random() * 6) + 1;
             eggContainer.innerHTML = `
                 <span class="status-success">Ovo obtido com sucesso!</span>
-                <span style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.35rem;">
+                <span style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.4rem;">
                     Tempo necessário: <strong>${sessoesParaChocar} sessão(ões)</strong> para chocar (rolagem: 1d6).
                 </span>
             `;
@@ -594,13 +592,20 @@
         }
     }
 
+    // Lê um input numérico, garantindo um inteiro não-negativo mesmo se o
+    // usuário digitar algo inválido ou negativo diretamente no campo.
+    function lerPontosNaoNegativos(id) {
+        const valor = parseInt(document.getElementById(id).value, 10);
+        return Number.isFinite(valor) ? Math.max(0, valor) : 0;
+    }
+
     function gerarEstatisticasFilhote() {
-        const p1Pontos = parseInt(document.getElementById('p1-pontos').value, 10) || 0;
+        const p1Pontos = lerPontosNaoNegativos('p1-pontos');
         const p1Alfa = document.getElementById('p1-alfa').checked;
         const p1Shiny = document.getElementById('p1-shiny').checked;
         const p1Knot = document.getElementById('p1-knot').checked;
 
-        const p2Pontos = parseInt(document.getElementById('p2-pontos').value, 10) || 0;
+        const p2Pontos = lerPontosNaoNegativos('p2-pontos');
         const p2Alfa = document.getElementById('p2-alfa').checked;
         const p2Shiny = document.getElementById('p2-shiny').checked;
         const p2Knot = document.getElementById('p2-knot').checked;
@@ -616,9 +621,8 @@
         }
         const isAlfa = Math.random() < chanceAlfa;
 
-        // 2. Genética Shiny (Base dos Genitores + Modificador do Shiny Charm)
-        let denominadorShiny = 4000;
-
+        // 2. Genética Shiny (base dos genitores + modificador do Shiny Charm)
+        let denominadorShiny;
         if ((p1Shiny && p2Shiny) && (p1Knot || p2Knot)) {
             denominadorShiny = 10;
         } else if ((p1Shiny && p1Knot) || (p2Shiny && p2Knot)) {
@@ -637,48 +641,35 @@
 
         const isShiny = Math.random() < (1 / denominadorShiny);
 
-        // 3. Herança de Pontos
+        // 3. Herança de pontos
         let pontuacaoFinal = 0;
         let detalhamentoTexto = "";
 
         if (p1Knot || p2Knot) {
-            let basePontos = 0;
-            let secundarioPontos = 0;
-            let nomePortador = "";
-
-            if (p1Knot) {
-                basePontos = p1Pontos;
-                secundarioPontos = p2Pontos;
-                nomePortador = "Pai";
-            } else {
-                basePontos = p2Pontos;
-                secundarioPontos = p1Pontos;
-                nomePortador = "Mãe";
-            }
+            const portadorEhPai = p1Knot;
+            const basePontos = portadorEhPai ? p1Pontos : p2Pontos;
+            const secundarioPontos = portadorEhPai ? p2Pontos : p1Pontos;
+            const nomePortador = portadorEhPai ? "Pai" : "Mãe";
 
             const percentualBonus = Math.random() * 0.50;
             const pontosBonus = secundarioPontos * percentualBonus;
             pontuacaoFinal = Math.round(basePontos + pontosBonus);
 
-            detalhamentoTexto = `Regra Aplicada: Destiny Knot (${nomePortador}). O filhote recebeu 100% dos pontos da base (${basePontos} pts) mais um bônus sorteado de ${(percentualBonus * 100).toFixed(1)}% do outro genitor (+${Math.round(pontosBonus)} pts).`;
+            detalhamentoTexto = `Regra aplicada: Destiny Knot (${nomePortador}). O filhote recebeu 100% dos pontos da base (${basePontos} pts) mais um bônus sorteado de ${(percentualBonus * 100).toFixed(1)}% do outro genitor (+${Math.round(pontosBonus)} pts).`;
         } else {
             const mediaAritmetica = (p1Pontos + p2Pontos) / 2;
             const sorteioMediaExata = Math.random() < 0.30;
 
             if (sorteioMediaExata) {
                 pontuacaoFinal = Math.round(mediaAritmetica);
-                detalhamentoTexto = `Regra Aplicada: Herança de Média Exata (30% de chance). O filhote herdou a média aritmética direta dos genitores (${mediaAritmetica.toFixed(1)} pts).`;
+                detalhamentoTexto = `Regra aplicada: herança de média exata (30% de chance). O filhote herdou a média aritmética direta dos genitores (${mediaAritmetica.toFixed(1)} pts).`;
             } else {
-                const fatorVariação = 0.70 + (Math.random() * 0.60);
-                let calculoVariação = mediaAritmetica * fatorVariação;
+                const fatorVariacao = 0.70 + (Math.random() * 0.60);
                 const limiteSomaTotal = p1Pontos + p2Pontos;
+                const calculoVariacao = Math.min(mediaAritmetica * fatorVariacao, limiteSomaTotal);
 
-                if (calculoVariação > limiteSomaTotal) {
-                    calculoVariação = limiteSomaTotal;
-                }
-
-                pontuacaoFinal = Math.round(calculoVariação);
-                detalhamentoTexto = `Regra Aplicada: Variação Genética (70% de chance). Multiplicador de ${(fatorVariação * 100).toFixed(1)}% aplicado sobre a média dos pais (${mediaAritmetica.toFixed(1)} pts), com teto limitado à soma dos genitores (${limiteSomaTotal} pts).`;
+                pontuacaoFinal = Math.round(calculoVariacao);
+                detalhamentoTexto = `Regra aplicada: variação genética (70% de chance). Multiplicador de ${(fatorVariacao * 100).toFixed(1)}% aplicado sobre a média dos pais (${mediaAritmetica.toFixed(1)} pts), com teto limitado à soma dos genitores (${limiteSomaTotal} pts).`;
             }
         }
 
@@ -692,25 +683,17 @@
         const pointsOutput = document.getElementById('points-output');
         const calcDetails = document.getElementById('calculation-details');
 
-        if (isAlfa) {
-            badgeAlfa.textContent = "SIM";
-            badgeAlfa.className = "badge badge-alpha-yes";
-        } else {
-            badgeAlfa.textContent = "NÃO";
-            badgeAlfa.className = "badge badge-no";
-        }
+        badgeAlfa.textContent = isAlfa ? "SIM" : "NÃO";
+        badgeAlfa.className = isAlfa ? "badge badge-alpha-yes" : "badge badge-no";
 
-        if (isShiny) {
-            badgeShiny.textContent = "SIM";
-            badgeShiny.className = "badge badge-shiny-yes";
-        } else {
-            badgeShiny.textContent = "NÃO";
-            badgeShiny.className = "badge badge-no";
-        }
+        badgeShiny.textContent = isShiny ? "SIM" : "NÃO";
+        badgeShiny.className = isShiny ? "badge badge-shiny-yes" : "badge badge-no";
 
         pointsOutput.textContent = pontos;
         calcDetails.textContent = detalhamento;
 
+        resultCard.classList.remove('active');
+        void resultCard.offsetWidth; // reinicia a animação de entrada a cada geração
         resultCard.classList.add('active');
         resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
