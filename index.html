@@ -433,10 +433,10 @@
     </header>
 
     <div class="grid-parents">
-        <!-- Genitor 1 (Pai) -->
+        <!-- PAI -->
         <div class="card card-p1">
             <div class="card-header">
-                <span>Genitor 1 (Pai)</span>
+                <span>PAI</span>
             </div>
             <div class="form-group">
                 <label for="p1-pontos">Pontos Totais</label>
@@ -463,10 +463,10 @@
             </div>
         </div>
 
-        <!-- Genitor 2 (Mãe) -->
+        <!-- MÃE -->
         <div class="card card-p2">
             <div class="card-header">
-                <span>Genitor 2 (Mãe)</span>
+                <span>MÃE</span>
             </div>
             <div class="form-group">
                 <label for="p2-pontos">Pontos Totais</label>
@@ -507,7 +507,7 @@
         <button type="button" class="btn btn-secondary" onclick="verificarOvoSessao()">Verificar Ovo na Sessão</button>
         
         <div id="egg-container" class="egg-container-stable">
-            <span class="status-info">Aguardando verificação do ovo para esta sessão...</span>
+            <span class="status-info">Aguardando verificação do ovo...</span>
         </div>
     </div>
 
@@ -546,8 +546,6 @@
 </div>
 
 <script>
-    let ovoVerificadoNestaSessao = false;
-
     function salvarArquivoLocal() {
         const conteudo = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
         const blob = new Blob([conteudo], { type: 'text/html;charset=utf-8;' });
@@ -563,13 +561,6 @@
 
     function verificarOvoSessao() {
         const eggContainer = document.getElementById('egg-container');
-
-        if (ovoVerificadoNestaSessao) {
-            eggContainer.innerHTML = '<span class="status-fail">A checagem do ovo já foi realizada nesta sessão.</span>';
-            return;
-        }
-
-        ovoVerificadoNestaSessao = true;
         const obteveOvo = Math.random() < 0.50;
 
         if (obteveOvo) {
@@ -581,7 +572,7 @@
                 </span>
             `;
         } else {
-            eggContainer.innerHTML = '<span class="status-fail">Nenhum ovo foi gerado durante esta sessão.</span>';
+            eggContainer.innerHTML = '<span class="status-fail">Nenhum ovo foi gerado nesta tentativa.</span>';
         }
     }
 
@@ -622,7 +613,6 @@
             denominadorShiny = 4000;
         }
 
-        // Aplicação universal do Shiny Charm: reduz a dificuldade pela metade em qualquer cenário
         if (shinyCharm) {
             denominadorShiny = Math.round(denominadorShiny / 2);
         }
@@ -642,20 +632,20 @@
                 if (p1Pontos >= p2Pontos) {
                     basePontos = p1Pontos;
                     secundarioPontos = p2Pontos;
-                    nomePortador = "Genitor 1 (Maior pontuação)";
+                    nomePortador = "Pai (Maior pontuação)";
                 } else {
                     basePontos = p2Pontos;
                     secundarioPontos = p1Pontos;
-                    nomePortador = "Genitor 2 (Maior pontuação)";
+                    nomePortador = "Mãe (Maior pontuação)";
                 }
             } else if (p1Knot) {
                 basePontos = p1Pontos;
                 secundarioPontos = p2Pontos;
-                nomePortador = "Genitor 1";
+                nomePortador = "Pai";
             } else {
                 basePontos = p2Pontos;
                 secundarioPontos = p1Pontos;
-                nomePortador = "Genitor 2";
+                nomePortador = "Mãe";
             }
 
             const percentualBonus = Math.random() * 0.50;
