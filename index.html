@@ -53,7 +53,6 @@
             gap: 1.25rem;
         }
 
-        /* Top Header */
         header {
             text-align: center;
             padding: 1.25rem 1rem;
@@ -115,7 +114,6 @@
             border-color: var(--primary);
         }
 
-        /* Grid dos Genitores */
         .grid-parents {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -181,7 +179,6 @@
             box-shadow: 0 0 0 3px var(--primary-glow);
         }
 
-        /* Swithes / Checkboxes Modernos */
         .checkbox-group {
             display: flex;
             flex-direction: column;
@@ -251,7 +248,6 @@
             background: #ffffff;
         }
 
-        /* Seção do Ovo & Prevenção de CLS */
         .egg-section {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -277,7 +273,6 @@
             transition: all 0.2s ease;
         }
 
-        /* Botões */
         .btn {
             background: linear-gradient(135deg, var(--primary) 0%, #4f46e5 100%);
             color: #ffffff;
@@ -318,7 +313,6 @@
             border-color: var(--border-hover);
         }
 
-        /* Painel de Resultados */
         .result-card {
             background: var(--bg-card);
             border: 1px solid rgba(99, 102, 241, 0.4);
@@ -442,7 +436,7 @@
         <!-- Genitor 1 (Pai) -->
         <div class="card card-p1">
             <div class="card-header">
-                <span>PAI</span>
+                <span>Genitor 1 (Pai)</span>
             </div>
             <div class="form-group">
                 <label for="p1-pontos">Pontos Totais</label>
@@ -451,7 +445,7 @@
             <div class="checkbox-group">
                 <input type="checkbox" id="p1-alfa">
                 <label for="p1-alfa" class="toggle-label">
-                    <span class="toggle-text">Alfa</span>
+                    <span class="toggle-text">Porte Alfa</span>
                     <span class="toggle-switch"></span>
                 </label>
 
@@ -472,7 +466,7 @@
         <!-- Genitor 2 (Mãe) -->
         <div class="card card-p2">
             <div class="card-header">
-                <span>MÃE</span>
+                <span>Genitor 2 (Mãe)</span>
             </div>
             <div class="form-group">
                 <label for="p2-pontos">Pontos Totais</label>
@@ -481,7 +475,7 @@
             <div class="checkbox-group">
                 <input type="checkbox" id="p2-alfa">
                 <label for="p2-alfa" class="toggle-label">
-                    <span class="toggle-text">Alfa</span>
+                    <span class="toggle-text">Porte Alfa</span>
                     <span class="toggle-switch"></span>
                 </label>
 
@@ -555,8 +549,7 @@
     let ovoVerificadoNestaSessao = false;
 
     function salvarArquivoLocal() {
-        const conteudo = "<!DOCTYPE html>
-" + document.documentElement.outerHTML;
+        const conteudo = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
         const blob = new Blob([conteudo], { type: 'text/html;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -629,7 +622,7 @@
             denominadorShiny = 4000;
         }
 
-        // Aplicação universal do Shiny Charm: reduz o denominador pela metade em qualquer cenário
+        // Aplicação universal do Shiny Charm: reduz a dificuldade pela metade em qualquer cenário
         if (shinyCharm) {
             denominadorShiny = Math.round(denominadorShiny / 2);
         }
